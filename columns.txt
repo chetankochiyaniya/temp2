@@ -1,0 +1,39 @@
+Index = own index
+Id = username
+Masters = number of masters
+Users = number of users
+Current P&L = total P&L
+Amount = Pendding amount
+Status = Active / Block
+Only View = True / False
+
+Edit 
+only view
+status
+percentage
+----
+some time user name 
+
+
+
+"status": "A",
+            "username": "SMSE01",
+            "super_master_id": 17,
+            "partnership_percent": 10,
+            "only_view": false,
+            "total_pnl": 0,
+            "pending_amount": 0.0,
+            "number_of_master": 0,
+            "number_of_users": 0
+        },
+
+<th>Index</th>
+                        
+                                <th>Master</th>
+                                <th>Users</th>
+                                <th>Current P&L</th>
+                                <th>Amount</th>
+                                <th>View</th>
+                                <th>Ledger</th>
+                                <th>Status</th>
+                                <th>Edit</th>

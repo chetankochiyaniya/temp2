@@ -1,0 +1,192 @@
+import React, { Component } from 'react'
+
+
+//Datatable Modules
+import 'jquery/dist/jquery.min.js';
+import "datatables.net-dt/js/dataTables.dataTables"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery';
+
+export default class SuperMasterTable extends Component {
+
+    componentDidMount() {
+        //initialize datatable
+        var tableObj;
+        var editor;
+
+
+        $(document).ready(function () {
+
+
+            editor = new $.fn.dataTable.Editor( {
+                "table": "#super-master-table",
+                "fields": [ {
+                        "label": "Index:",
+                        "name": "Index"
+                    }, {
+                        "label": "Id:",
+                        "name": "Id"
+                    }, {
+                        "label": "Masters:",
+                        "name": "Masters"
+                    }, {
+                        "label": "Users:",
+                        "name": "Users"
+                    }, {
+                        "label": "Current:",
+                        "name": "Current"
+                    }, {
+                        "label": "Amount:",
+                        "name": "Amount",
+                    }, {
+                        "label": "Status:",
+                        "name": "Status"
+                    },
+                    {
+                        "label": "View:",
+                        "name": "View"
+                    },{
+                        "label": "Ledger:",
+                        "name": "Ledger"
+                    }
+                ]
+            } );
+
+
+            tableObj = $('#super-master-table').DataTable({
+                columns: [
+                    { data: "Index" },
+                    { data: "Id" },
+                    { data: "Masters" },
+                    { data: "Users" },
+                    { data: "Current" },
+                    {
+                        data: "Amount",
+                    },
+                    {
+                        data: "Status",
+                    },
+                    {data: "View"},
+                    {
+                        data: "Ledger",
+                    },
+                    {
+                        data: null,
+                        className: "dt-center editor-edit",
+                        defaultContent: ' <button type="button" class="btn btn-outline-primary btn-icon-text">Edit<i class="mdi mdi-table-edit btn-icon-append"></i></button>',
+                        orderable: false
+                    },
+                ]
+            });
+
+                // Edit record
+            $('#super-master-table').on('click', 'td.editor-edit', function (e) {
+                e.preventDefault();
+                console.log("edit func call",e)
+
+                // editor.edit($(this).closest('tr'), {
+                //     title: 'Edit record',
+                //     buttons: 'Update'
+                // });
+            });
+
+
+        });
+
+    }
+
+
+    render() {
+        return (
+            <div className="table-responsive mt-3">
+                <table className="table table-bordered" id="super-master-table">
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Id</th>
+                            <th>Masters</th>
+                            <th>Users</th>
+                            <th>Current</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>View</th>
+                            <th>Ledger</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                            <td>1</td>
+                            <td>SM0001</td>
+                            <td>7</td>
+                            <td>30</td>
+                            <td className="text-danger">-23500<i className="mdi mdi-arrow-down"></i></td>
+                            <td className="text-success">5000<i className="mdi mdi-arrow-up"></i></td>
+                            <td>
+                                <button type="button" className="btn btn-outline-secondary btn-icon-text">
+                                    View
+                                    <i className="mdi mdi-eye btn-icon-append"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" className="btn btn-outline-info btn-icon-text">
+                                    Ledger
+                                    <i className="mdi mdi-table-large btn-icon-append"></i>
+                                </button>
+                            </td>
+                            <td><label className="badge badge-danger">Pending</label></td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>SM0001</td>
+                            <td>7</td>
+                            <td>30</td>
+                            <td className="text-danger">-23500<i className="mdi mdi-arrow-down"></i></td>
+                            <td className="text-success">5000<i className="mdi mdi-arrow-up"></i></td>
+                            <td>
+                                <button type="button" className="btn btn-outline-secondary btn-icon-text">
+                                    View
+                                    <i className="mdi mdi-eye btn-icon-append"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" className="btn btn-outline-info btn-icon-text">
+                                    Ledger
+                                    <i className="mdi mdi-table-large btn-icon-append"></i>
+                                </button>
+                            </td>
+                            <td><label className="badge badge-danger">Pending</label></td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>SM0001</td>
+                            <td>7</td>
+                            <td>30</td>
+                            <td className="text-danger">-23500<i className="mdi mdi-arrow-down"></i></td>
+                            <td className="text-success">5000<i className="mdi mdi-arrow-up"></i></td>
+                            <td>
+                                <button type="button" className="btn btn-outline-secondary btn-icon-text">
+                                    View
+                                    <i className="mdi mdi-eye btn-icon-append"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" className="btn btn-outline-info btn-icon-text">
+                                    Ledger
+                                    <i className="mdi mdi-table-large btn-icon-append"></i>
+                                </button>
+                            </td>
+                            <td><label className="badge badge-danger">Pending</label></td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+}

@@ -1,0 +1,79 @@
+import React from 'react'
+import './formhelper.css';
+import { Formik } from 'formik';
+import { Form } from 'react-bootstrap';
+
+export default function SuperMasterEdit() {
+    return (
+        <div className="card border border-secondary">
+            <div className="card-body">
+                <h4 className="card-title">Edit Super master</h4>
+                <Formik
+                    initialValues={{
+                        mid: 0,
+                        masters: '',
+                        users: '',
+                        current_pnl: 0,
+                        amount: 0,
+                    }}
+                    validate={(values) => {
+                        const errors = {};
+                        if (!values.mid) {
+                            errors.mid = <div style={{ color: "red", fontSize: "12px" }}>Required</div>;
+                        } 
+                        if (!values.masters) {
+                            errors.masters = <div style={{ color: "red", fontSize: "12px" }}>Required</div>;
+                        } 
+                        if (!values.users) {
+                            errors.users = <div style={{ color: "red", fontSize: "12px" }}>Required</div>;
+                        } 
+                        if(!values.current_pnl){
+                            errors.current_pnl = <div style={{ color: "red", fontSize: "12px" }}>Required</div>;
+                        }
+                        if(!values.amount){
+                            errors.amount = <div style={{ color: "red", fontSize: "12px" }}>Required</div>;
+                        }
+
+                        return errors;
+                    }}
+                    onSubmit={async (values) => {
+                        await new Promise((r) => setTimeout(r, 500));
+                        console.log(values);
+                    }}
+
+                >
+                    {({ values, errors, touched, isValidating, resetForm, handleSubmit, initialValues }) =>
+                    (<>
+                        <Form.Group>
+                            <label htmlFor="supermastermid">mid</label>
+                            <Form.Control onChange={e => { values.mid = e.target.value; e.target.value = e.target.value.toUpperCase() }} defaultValue={values.mid} type="text" id="supermasterusename" name="mid" placeholder="mid" />
+                            {errors.mid}
+                        </Form.Group>
+                        <Form.Group>
+                            <label htmlFor="supermastermasters">masters</label>
+                            <Form.Control onChange={e => { values.masters = e.target.value }} defaultValue={values.masters} type="number" className="form-control" id="supermastermasters" name="masters" placeholder="master" />
+                            {errors.masters}
+                        </Form.Group>
+                        <Form.Group>
+                            <label htmlFor="supermasterusers">users</label>
+                            <Form.Control onChange={e => { values.users = e.target.value }} defaultValue={values.users} type="number" className="form-control" id="supermasterusers" name="users" placeholder="user" />
+                            {errors.users}
+                        </Form.Group>
+                        <Form.Group>
+                            <label htmlFor="supermastercurrent_pnl">current_pnl</label>
+                            <Form.Control onChange={e => { values.users = e.target.value }} type="number" className="form-control" id="supermastercurrent_pnl" name="current_pnl" placeholder="current p&l" />
+                            {errors.current_pnl}
+                        </Form.Group>
+                        <Form.Group>
+                            <label htmlFor="supermasteramount">amount</label>
+                            <Form.Control onChange={e => { values.amount = e.target.value }} defaultValue={values.amount} type="number" className="form-control" id="supermasteramount" name="amount" placeholder="amount" />
+                            {errors.amount}
+                        </Form.Group>
+                        <button type="submit" onClick={e => handleSubmit(values)} className="btn btn-primary">Submit</button>
+                        <button type="reset" onClick={e => resetForm()} className="btn btn-danger float-right">Clear</button>
+                    </>)}
+                </Formik>
+            </div>
+        </div >
+    )
+}

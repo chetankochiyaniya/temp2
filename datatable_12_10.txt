@@ -1,0 +1,149 @@
+import React, { Component, useState } from 'react'
+
+import Popup from 'reactjs-popup'
+import SuperMasterEdit from '../../components/forms/SuperMasterEdit';
+
+//Datatable Modules
+import 'jquery/dist/jquery.min.js';
+import "datatables.net-dt/js/dataTables.dataTables"
+import "datatables.net-dt/css/jquery.dataTables.min.css"
+import $ from 'jquery';
+
+import SocketHandler from '../../../SocketHandler/SocketHanler';
+
+export default class SuperMasterTable extends Component {
+
+    componentDidMount() {
+        //initialize datatable
+        new SocketHandler();
+        var tableObj;
+        const tableMap = new Map();
+        const apiCall = {
+            "event": "supermasterdata",
+            "data": {
+                "id": 0
+            }
+        };
+
+        var intervalId = window.setInterval(function () {
+            if (SocketHandler.Instance.isConnected) {
+                SocketHandler.Instance.callEventWithData(JSON.stringify(apiCall));
+            }
+        }, 20000);
+
+        document.addEventListener('socketstatus', (e) => {
+            if (e.detail === "connected") {
+                console.log("connected")
+                new SocketHandler().callEventWithData(JSON.stringify(apiCall));
+            }
+        }, false);
+
+        const supermasterData =
+            (e) => {
+                console.log("In the supermaster listener", Object.values(e.detail));
+                const jsonArr = Object.values(e.detail);
+                for (let i = 0; i < jsonArr.length; i++) {
+                    let obj = jsonArr[i];
+                    if (tableMap.has(obj.super_master_id)) {
+                        var rowNumber = tableMap.get(obj.super_master_id);
+                        tableObj.row(rowNumber).data([
+                            rowNumber + 1,
+                            obj.username,
+                            obj.number_of_master,
+                            obj.number_of_users,
+                            getPnlComponent(obj.total_pnl),
+                            getPnlComponent(obj.pending_amount),
+                            '<button type="button" class="btn btn-outline-secondary btn-icon-text">View<i class="mdi mdi-eye btn-icon-append"></i></button>',
+                            '<button type="button" class="btn btn-outline-info btn-icon-text">Ledger<i class="mdi mdi-table-large btn-icon-append"></i></button>',
+                            getStatus(obj.status),
+                            '<button type="button" id="btnEdit" class="btn btn-outline-primary btn-icon-text editBtn" username=' + obj.username + ' super_master_id=' + obj.super_master_id + ' status=' + obj.status + ' only_view=' + obj.only_view + ' partnership_percent=' + obj.partnership_percent + ' >Edit<i class="mdi mdi-table-edit btn-icon-append"></i></button>'
+                        ]).draw();
+
+                    }
+                    else {
+                        var rowNumber = tableObj.rows().count();
+                        tableMap.set(obj.super_master_id, rowNumber);
+                        tableObj.row.add([
+                            rowNumber + 1,
+                            obj.username,
+                            obj.number_of_master,
+                            obj.number_of_users,
+                            getPnlComponent(obj.total_pnl),
+                            getPnlComponent(obj.pending_amount),
+                            '<button type="button" class="btn btn-outline-secondary btn-icon-text">View<i class="mdi mdi-eye btn-icon-append"></i></button>',
+                            '<button type="button" class="btn btn-outline-info btn-icon-text">Ledger<i class="mdi mdi-table-large btn-icon-append"></i></button>',
+                            getStatus(obj.status),
+                            '<button type="button" id="btnEdit" class="btn btn-outline-primary btn-icon-text editBtn" username=' + obj.username + ' super_master_id=' + obj.super_master_id + ' status=' + obj.status + ' only_view=' + obj.only_view + ' partnership_percent=' + obj.partnership_percent + ' >Edit<i class="mdi mdi-table-edit btn-icon-append"></i></button>'
+                        ]).draw();
+                    }
+                    // console.log(obj.master_id);
+
+                }
+            }
+        document.addEventListener('supermasterdata', supermasterData, false);
+
+        function getPnlComponent(pnlVal) {
+            var fontClass = 'success';
+            var iconClass = 'up'
+            if (pnlVal < 0) {
+                fontClass = 'danger';
+                iconClass = 'down';
+            }
+            else if(pnlVal == 0){
+                fontClass = 'light'
+                iconClass = ''
+            }
+            return '<span class=" text-' + fontClass + '">' + pnlVal + '<i class="mdi mdi-arrow-' + iconClass + '"></i></span>';
+        }
+
+
+        function getStatus(status) {
+            if (status == "A") {
+                return '<label class="badge badge-success">Active</label>';
+            } else {
+                return '<label class="badge badge-danger">Block</label>'
+            }
+        }
+
+
+        $(document).ready(function () {
+
+            $(document).on('click', '.editBtn', function (e) {
+                console.log($(this)[0]);
+                // console.log($(this).attr('status'));
+                console.log($(this).attr('super_master_id'));
+                console.log($(this).attr('partnership_percent'));
+                console.log($(this).attr('only_view'));
+                console.log($(this).attr('username'));
+            });
+            tableObj = $('#super-master-table').DataTable();
+        });
+
+    }
+
+
+    render() {
+        return (
+            <>
+                <div className="table-responsive mt-3">
+                    <table className="table table-bordered" id="super-master-table">
+                        <thead>
+                            <tr>
+                                <th>Index</th>
+                                <th>Id</th>
+                                <th>Masters</th>
+                                <th>Users</th>
+                                <th>Current P&L</th>
+                                <th>Amount</th>
+                                <th>View</th>
+                                <th>Ledger</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </>
+        )
+    }
+}
